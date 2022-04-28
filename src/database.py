@@ -16,7 +16,8 @@ try:
     # Connect to the database
     
     #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
-    DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
+    #DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
+    DATABASE_URL = os.enviton['DATABASE_URL']
 
     database = databases.Database(DATABASE_URL)
 
