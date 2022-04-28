@@ -2,7 +2,7 @@
 
 # Pyscopg2
 import psycopg2
-
+import databases
 
 
 # SQLAlchemy
@@ -17,7 +17,7 @@ try:
     #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
     DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
 
-    databese = databases.Database(DATABASE_URL)
+    database = databases.Database(DATABASE_URL)
 
     metadata = sqlalchemy.MetaData()
     
@@ -25,7 +25,7 @@ try:
         #SQLALCHEMY_DATABASE_URL
         DATABASE_URL
     )
-    
+
     SessionLocal = sessionmaker(
         autocommit=False,
         autoflush=False,

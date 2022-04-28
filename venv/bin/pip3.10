@@ -1,4 +1,4 @@
-#!/home/harngalf/Platzi/Master/squad_User_account/User-Studio-Ghibli-Tracker/api/venv/bin/python3.10
+#!/home/harngalf/Platzi/Master/squad_User_account/api/Studio-Ghibli-Tracker-UserAccountS-C10/venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys
