@@ -15,7 +15,7 @@ from models.movies_mod import MovieM
 from models.user_mod import UserM
 from models.user_movies_mod import UserMovie
 
-Base.metadata.create_all(engine)
+#Base.metadata.create_all(engine)
 
 # Dependency
 def get_db():
