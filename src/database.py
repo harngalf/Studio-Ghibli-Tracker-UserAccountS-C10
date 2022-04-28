@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 try:
     # Connect to the database
     
-    SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
+    SQLALCHEMY_DATABASE_URL = os.environ['DATABASE_URL']
 
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL
