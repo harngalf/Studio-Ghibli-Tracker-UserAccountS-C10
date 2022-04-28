@@ -3,6 +3,8 @@
 # Pyscopg2
 import psycopg2
 
+
+
 # SQLAlchemy
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, MetaData
@@ -12,11 +14,18 @@ from sqlalchemy.orm import sessionmaker
 try:
     # Connect to the database
     
-    SQLALCHEMY_DATABASE_URL = os.environ['DATABASE_URL']
+    #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
+    DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
 
+    databese = databases.Database(DATABASE_URL)
+
+    metadata = sqlalchemy.MetaData()
+    
     engine = create_engine(
-        SQLALCHEMY_DATABASE_URL
+        #SQLALCHEMY_DATABASE_URL
+        DATABASE_URL
     )
+    
     SessionLocal = sessionmaker(
         autocommit=False,
         autoflush=False,
