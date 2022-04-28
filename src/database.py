@@ -9,6 +9,7 @@ import databases
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
+import sqlalchemy
 
 
 try:
