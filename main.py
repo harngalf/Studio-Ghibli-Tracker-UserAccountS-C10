@@ -3,7 +3,7 @@ from typing import Optional, List
 from enum import Enum
 
 #Pydantic
-from pydantic import BaseModel, Field, EmailStr, HttpUrl
+#from pydantic import BaseModel, Field, EmailStr, HttpUrl
 
 #FastAPI 
 from fastapi import FastAPI
