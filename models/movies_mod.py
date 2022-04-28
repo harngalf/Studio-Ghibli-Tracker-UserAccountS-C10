@@ -4,8 +4,8 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boo
 from sqlalchemy.orm import relationship
 
 # API docs connection
-from src.database import SessionLocal, engine, Base, metadata
-
+from src.database import engine, Base, metadata
+from src.database import SessionLocal
 
 ## Movies DB Model
 class MovieM(Base):
