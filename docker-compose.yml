@@ -1,6 +1,25 @@
 version: '3.3'
 
 services:
+  # web:
+  #   build: .
+  #   ports:
+  #     - "5000:5000"
+  #   env_file: .env
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - ./webapp:/opt/webapp
+  
+  
+  
+  app:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0
+    ports:
+      - 8000:8000
+    
+
   postgres:
     image: postgres:14
     environment:
