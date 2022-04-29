@@ -154,3 +154,4 @@ def get_user(
     if not db_user_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
     return db_user_id
+    

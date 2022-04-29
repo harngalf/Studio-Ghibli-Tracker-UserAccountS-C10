@@ -33,7 +33,7 @@ def get_db():
 
 @usermovies.post(
     path="/user/{user_id}/movies/rate",
-    response_model=user_movie_sch.UserRating,
+    #response_model=user_movie_sch.UserRating,
     status_code=status.HTTP_201_CREATED,
     summary="Rate a movie",
     tags=["User/Movies"],
@@ -62,6 +62,7 @@ def rate_movie(
     #db_user_movies = crud.create_user_movies(db=db, user_id=user_id, movie_id=movie_id)
     #return db_user_movies
     pass
+
 ## Show a user movies
 @usermovies.get(
     path="/users/{user_id}/movies",
