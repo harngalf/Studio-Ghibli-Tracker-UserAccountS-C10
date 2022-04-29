@@ -28,18 +28,18 @@ class UserMovie(Base):
         String(1),
         default="💚"
     )
-    # userM_id = Column(
-    #     Integer,
-    #     ForeignKey("user_mod.user_id"),
-    #     nullable=False
-    # )
-    # movieU_id = Column(
-    #     Integer,
-    #     ForeignKey("movies_mod.movie_id"),
-    #     nullable=False
-    # )
+    userM_id = Column(
+        Integer,
+        ForeignKey("user_mod.user_id"),
+        nullable=False
+    )
+    movieU_id = Column(
+        Integer,
+        ForeignKey("movies_mod.movie_id"),
+        nullable=False
+    )
 
-    #userM = relationship("UserM", back_populates="user_movies_mod")
-    #movieU = relationship("MovieM", back_populates="user_movies_mod")
+    userM = relationship("UserM", back_populates="user_movies_mod")
+    movieU = relationship("MovieM", back_populates="user_movies_mod")
 
 #Base.metadata.create_all(engine)

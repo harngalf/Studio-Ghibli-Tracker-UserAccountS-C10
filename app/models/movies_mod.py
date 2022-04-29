@@ -71,6 +71,6 @@ class MovieM(Base):
         nullable=True
     )
 
-    #user_movies_mod = relationship("UserMovie", back_populates="movieU")
+    user_movies_mod = relationship("UserMovie", back_populates="movieU")
 
 #Base.metadata.create_all(engine)
