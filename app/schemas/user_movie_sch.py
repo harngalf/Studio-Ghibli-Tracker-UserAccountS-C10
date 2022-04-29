@@ -42,7 +42,7 @@ class UserRating(UserRatingBase):
     )
     #userM_id: int
     #movieU_id: int
-    user: UserS
-    movies: list[MovieS] = []
+    #user: UserS
+    #movies: list[MovieS] = []
     class Config:
         orm_mode = True
