@@ -16,8 +16,11 @@ services:
   app:
     build: .
     command: uvicorn main:app --host 0.0.0.0
+    depends_on:
+      - postgres
     ports:
       - 8000:8000
+
     
 
   postgres:
@@ -37,5 +40,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@mail.com
       PGADMIN_DEFAULT_PASSWORD: root
+    depends_on:
+      - postgres
     ports:
       - 5050:80

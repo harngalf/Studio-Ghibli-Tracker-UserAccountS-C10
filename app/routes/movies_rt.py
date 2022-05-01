@@ -22,7 +22,7 @@ from models import movies_mod
 from src.database import SessionLocal, engine, Base
 from src import crud
 
-movies_mod.Base.metadata.create_all(bind=engine)
+#movies_mod.Base.metadata.create_all(bind=engine)
 
 movie = APIRouter()
 
