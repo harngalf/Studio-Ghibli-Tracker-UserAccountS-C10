@@ -4,7 +4,7 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boo
 from sqlalchemy.orm import relationship
 
 # API docs connection
-from src.database import Base
+from src.database import Base, engine
 
 
 ## Movies DB Model
@@ -70,7 +70,7 @@ class MovieM(Base):
         Text,
         nullable=True
     )
+    
+    #user_movies_m = relationship("UserMovie", back_populates="movieU")
 
-    user_movies_mod = relationship("UserMovie", back_populates="movieU")
-
-#Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)

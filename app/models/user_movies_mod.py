@@ -4,7 +4,7 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boo
 from sqlalchemy.orm import relationship
 
 # API docs connection
-from src.database import Base
+from src.database import Base, engine
 
 
 ## Movies/User DB Model
@@ -30,16 +30,16 @@ class UserMovie(Base):
     )
     userM_id = Column(
         Integer,
-        ForeignKey("user_mod.user_id"),
+        ForeignKey("user_id"),
         nullable=False
     )
     movieU_id = Column(
         Integer,
-        ForeignKey("movies_mod.movie_id"),
+        ForeignKey("movie_id"),
         nullable=False
     )
 
-    userM = relationship("UserM", back_populates="user_movies_mod")
-    movieU = relationship("MovieM", back_populates="user_movies_mod")
+    #userM = relationship("UserM", back_populates="user_movies_u")
+    #movieU = relationship("MovieM", back_populates="user_movies_m")
 
-#Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)

@@ -87,7 +87,7 @@ def movie_create(
     response_model=List[movie_sch.MovieS], 
     status_code=status.HTTP_200_OK,
     tags=["Movies"],
-    summary="Home page"
+    summary="Movies"
     )
 def movies(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
