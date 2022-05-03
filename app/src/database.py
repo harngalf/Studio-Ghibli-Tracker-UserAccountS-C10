@@ -16,10 +16,10 @@ import sqlalchemy
 try:
     # Connect to the database
     
-    SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@postgres/std_ghibli_db"
+    #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@postgres/std_ghibli_db"
     #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
     #DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
-    #DATABASE_URL = os.environ['DATABASE_URL']
+    DATABASE_URL = os.environ['DATABASE_URL']
 
     #database = databases.Database(DATABASE_URL)
 
@@ -28,8 +28,8 @@ try:
     #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
     engine = create_engine(
-        SQLALCHEMY_DATABASE_URL
-        #DATABASE_URL
+        #SQLALCHEMY_DATABASE_URL
+        DATABASE_URL
     )
 
     SessionLocal = sessionmaker(
