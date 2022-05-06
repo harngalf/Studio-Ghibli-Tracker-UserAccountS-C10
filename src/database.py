@@ -38,7 +38,7 @@ try:
         bind=engine
     )
     Base = declarative_base()
-    metadata.create_all(engine)
+    #metadata.create_all(engine)
     
     #meta = MetaData
 
