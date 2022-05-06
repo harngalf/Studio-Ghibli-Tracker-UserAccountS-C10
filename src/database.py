@@ -19,7 +19,7 @@ try:
     #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@postgres/std_ghibli_db"
     #SQLALCHEMY_DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
     #DATABASE_URL = "postgresql://harngalf:A142536@localhost:5432/std_ghibli_db"
-    DATABASE_URL = os.environ['postgres://yayrtajuzkmisy:781072834cdacb0f7e4b63106f0b84907ba9ed57076a8f99876be2db1f8d98d7@ec2-34-194-73-236.compute-1.amazonaws.com:5432/dan4kvev3lephd']
+    DATABASE_URL = os.environ['DATABASE_URL']
 
     #database = databases.Database(DATABASE_URL)
 
