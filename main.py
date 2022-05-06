@@ -12,7 +12,7 @@ from fastapi import HTTPException
 from fastapi import Body, Query, Path, Form
 
 # API Files
-from . import crud, models, schemas
+import crud, models, schemas
 from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
