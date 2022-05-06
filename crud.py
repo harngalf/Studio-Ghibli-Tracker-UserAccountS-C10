@@ -1,55 +1,36 @@
-# Python
-#from cryptography.fernet import Fernet
 
 # SQLAlchemy
 from sqlalchemy.orm import Session
 
 # API files
-from src.database import Base, engine, SessionLocal
-#from schemas import movie_sch, user_sch, user_movie_sch
-from schemas.user_sch import UserS, UserCreate, UserBase
-from schemas.movie_sch import MovieS, MovieCreate, MovieBase
-from schemas.user_movie_sch import UserMovieCreate, UserRating, UserRatingBase
-#from models import movies_mod, user_mod, user_movies_mod
-from models.movies_mod import MovieM
-from models.user_mod import UserM
-from models.user_movies_mod import UserMovie
+from . import models, schemas
 
-#Base.metadata.create_all(engine)
-
-# Dependency
-def get_db():
-    db = SessionLocal() 
-    try:
-        yield db
-    finally:
-        db.close()
-
+# CRUD operations
 def get_user(
     db: Session, 
     user_id: int
 ):
-    return db.query(UserM).filter(UserM.user_id == user_id).first()
+    return db.query(models.UserM).filter(models.UserM.user_id == user_id).first()
 
 def get_user_by_email(
     db: Session, 
     email: str
 ):
-    return db.query(UserM).filter(UserM.email == email).first()
+    return db.query(models.UserM).filter(models.UserM.email == email).first()
 
 def get_users(
     db: Session, 
     skip: int = 0, 
     limit: int = 100
 ):
-    return db.query(UserM).offset(skip).limit(limit).all()
+    return db.query(models.UserM).offset(skip).limit(limit).all()
 
 def create_user(
     db: Session, 
-    user: UserS
+    user: schemas.UserS
 ):
     fake_hashed_password = user.hashed_password + "not really hashed"
-    db_user = UserM(
+    db_user = models.UserM(
         # **user.dict()
         email=user.email,
         hashed_password=fake_hashed_password,
@@ -66,7 +47,7 @@ def get_movies(
     skip: int = 0, 
     limit: int = 100
 ):
-    return db.query(MovieM).offset(skip).limit(limit).all()
+    return db.query(models.MovieM).offset(skip).limit(limit).all()
 
 
 def get_movie(
@@ -74,19 +55,19 @@ def get_movie(
     movie_id: int,
     title: str
 ):
-    return db.query(MovieM).filter(MovieM.movie_id == movie_id).first()  
+    return db.query(models.MovieM).filter(models.MovieM.movie_id == movie_id).first()  
 
 def get_movie_by_title(
     db: Session, 
     title: str
 ):
-    return db.query(MovieM).filter(MovieM.title == title).first()
+    return db.query(models.MovieM).filter(models.MovieM.title == title).first()
 
 def create_movies(
     db: Session,
-    movie: MovieS
+    movie: schemas.MovieS
 ):
-    db_movies = MovieM(**movie.dict())
+    db_movies = models.MovieM(**movie.dict())
     db.add(db_movies)
     db.commit()
     db.refresh(db_movies)
@@ -95,7 +76,7 @@ def create_movies(
 
 def create_user_movies(
     db: Session, 
-    user_movies: UserRating
+    user_movies: schemas.UserRating
 ):
     # db_user_movies = UserMovie(
     #     user_id=user_movies.user_id,
