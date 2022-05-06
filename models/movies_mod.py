@@ -4,8 +4,8 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boo
 from sqlalchemy.orm import relationship
 
 # API docs connection
-#from src.database import Base, engine
-from src import database
+from src.database import Base, engine
+#from src import database
 
 
 ## Movies DB Model
@@ -74,4 +74,4 @@ class MovieM(Base):
     
     #user_movies_m = relationship("UserMovie", back_populates="movieU")
 
-Base.metadata.create_all(engine)
+#Base.metadata.create_all(engine)
