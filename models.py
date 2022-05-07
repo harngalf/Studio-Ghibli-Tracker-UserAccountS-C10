@@ -3,11 +3,11 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boo
 from sqlalchemy.orm import relationship
 
 # API docs connection
-from .database import Base
+import database
 
 
 ## User DB Model
-class UserM(Base):
+class UserM(database.Base):
     __tablename__ = "users"
     
     user_id = Column(
@@ -36,7 +36,7 @@ class UserM(Base):
     )
 
 ## Movies DB Model
-class MovieM(Base):
+class MovieM(database.Base):
     __tablename__ = "movies"
 
     movie_id = Column(
@@ -100,7 +100,7 @@ class MovieM(Base):
     )
     
 ## Movies/User DB Model
-class UserMovie(Base):
+class UserMovie(database.Base):
     __tablename__ = "user_movies"
 
     user_movie_id = Column(

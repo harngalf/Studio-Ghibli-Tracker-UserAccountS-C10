@@ -13,16 +13,16 @@ from fastapi import Body, Query, Path, Form
 
 # API Files
 import crud, models, schemas
-from .database import SessionLocal, engine
+import database
 
-models.Base.metadata.create_all(bind=engine)
+#models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 
 # Dependency
 def get_db():
-    db = SessionLocal()
+    db = database.SessionLocal()
     try:
         yield db
     finally:
@@ -31,15 +31,15 @@ def get_db():
 # Routes
 
 ## User
-@user.post(
+@app.post(
     path="/user/singup", 
-    response_model=UserS,
+    response_model=schemas.UserS,
     status_code=status.HTTP_201_CREATED,
     tags=["User"],
     summary="Create a new user",
     )
 async def create_user(
-    user: UserCreate,
+    user: schemas.UserCreate,
     db: Session = Depends(get_db)    
     ):
     """
@@ -64,15 +64,15 @@ async def create_user(
     return crud.create_user(db=db, user=user)
     
 # Login User
-@user.post(
+@app.post(
     path="/login",
-    response_model=UserS,
+    response_model=schemas.UserS,
     status_code=status.HTTP_200_OK,
     tags=["User"],
     summary="Login user",
     )
 def login(
-    user: UserLogP,
+    user: schemas.UserLogP,
     db: Session = Depends(get_db)
 ):
     """
@@ -94,9 +94,9 @@ def login(
     return db_userlogin
 
 ## Show all users
-@user.get(
+@app.get(
     path="/users",
-    response_model=List[UserS],
+    response_model=list[schemas.UserS],
     status_code=status.HTTP_200_OK,
     summary="Get all users",
     tags=["User"],
@@ -120,9 +120,9 @@ def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 ### Show a user by id
-@user.get(
+@app.get(
     path="/users/{user_id}",
-    response_model=UserS,
+    response_model=schemas.UserS,
     status_code=status.HTTP_200_OK,
     summary="Get user by id",
     tags=["User"]
@@ -153,16 +153,16 @@ def get_user(
     return db_user_id
     
 ## Movies
-@movie.post(
+@app.post(
     path="/movies/create",
-    response_model=movie_sch.MovieS, 
+    response_model=schemas.MovieS, 
     status_code=status.HTTP_201_CREATED,
     tags=["Movies"],
     summary="Home page"
     )
 def movie_create(
-        movie: movie_sch.MovieCreate, 
-        db: Session = Depends(crud.get_db)
+        movie: schemas.MovieCreate, 
+        db: Session = Depends(get_db)
     ):
     """
     ## Home
@@ -199,9 +199,9 @@ def movie_create(
     
 
 ### Show All Movies
-@movie.get(
+@app.get(
     path="/movies/",
-    response_model=List[movie_sch.MovieS], 
+    response_model=list[schemas.MovieS], 
     status_code=status.HTTP_200_OK,
     tags=["Movies"],
     summary="Movies"
@@ -237,9 +237,9 @@ def movies(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
    
 ### Show Movie by title
 
-@movie.get(
+@app.get(
     path="/movies/{title}",
-    response_model=movie_sch.MovieS,
+    response_model=schemas.MovieS,
     status_code=status.HTTP_200_OK,
     tags=["Movies"],
     summary="Home page"
@@ -276,7 +276,7 @@ def movie_by_title(
     return movie
 
 ## User Movies
-@usermovies.post(
+@app.post(
     path="/user/{user_id}/movies/rate",
     #response_model=user_movie_sch.UserRating,
     status_code=status.HTTP_201_CREATED,
@@ -309,7 +309,7 @@ def rate_movie(
     pass
 
 ## Show a user movies
-@usermovies.get(
+@app.get(
     path="/users/{user_id}/movies",
     #response_model=List[UserRating],
     status_code=status.HTTP_200_OK,

@@ -3,7 +3,7 @@
 from sqlalchemy.orm import Session
 
 # API files
-from . import models, schemas
+import models, schemas
 
 # CRUD operations
 def get_user(
