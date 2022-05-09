@@ -277,17 +277,17 @@ def movie_by_title(
 
 ## User Movies
 @app.post(
-    path="/user/{user_id}/movies/rate",
-    #response_model=user_movie_sch.UserRating,
+    path="/user/{user_id}/movies/",
+    response_model=schemas.UserRating,
     status_code=status.HTTP_201_CREATED,
     summary="Rate a movie",
     tags=["User/Movies"],
     )
 def rate_movie(
-    #user_id: int,
-    #movie_id: int,
-    #user_ratinf: user_movie_sch.UserRatingBase,
-    #db: Session = Depends(get_db)
+    userM_id: int,
+    movieU_id: int,
+    user_movies: schemas.UserMovieCreate,
+    db: Session = Depends(get_db)
 ):
     """
     ## Rate a movie
@@ -304,9 +304,12 @@ def rate_movie(
         - rating_stars: Optional[int] -> The rating of the movie created
         - rating_emoji: Optional[str] -> The emoji rating of the movie created
     """
-    #db_user_movies = crud.create_user_movies(db=db, user_id=user_id, movie_id=movie_id)
-    #return db_user_movies
-    pass
+    return crud.create_user_movies(
+        db=db, 
+        user_movies=user_movies, 
+        user_id=userM_id, 
+        movie_id=movieU_id
+        )
 
 ## Show a user movies
 @app.get(

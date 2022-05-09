@@ -76,16 +76,16 @@ def create_movies(
 
 def create_user_movies(
     db: Session, 
-    user_movies: schemas.UserRating
+    user_movies: schemas.UserMovieCreate,
+    user_id: int,
+    movie_id: int
 ):
-    # db_user_movies = UserMovie(
-    #     user_id=user_movies.user_id,
-    #     movie_id=user_movies.movie_id,
-    #     rating_stars=user_movies.rating_stars,
-    #     rating_emoji=user_movies.rating_emoji
-    # )
-    db_user_movies = UserMovie(**user_movies.dict())
+    db_user_movies = models.UserMovie(
+        **user_movies.dict(),
+        userM_id=user_id,
+        movieU_id=movie_id
+    )
     db.add(db_user_movies)
     db.commit()
-    db.refresh(db_user_movies)
+    db.refresh(db_user_movies)    
     return db_user_movies

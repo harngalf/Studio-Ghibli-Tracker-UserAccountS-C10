@@ -35,6 +35,11 @@ class UserM(database.Base):
         default=True
     )
 
+    user_movies = relationship(
+        "UserMovie",
+        back_populates="userM"
+    )
+
 ## Movies DB Model
 class MovieM(database.Base):
     __tablename__ = "movies"
@@ -99,6 +104,12 @@ class MovieM(database.Base):
         nullable=True
     )
     
+    user_movies = relationship(
+        "UserMovie",
+        back_populates="movieU"
+    )
+
+
 ## Movies/User DB Model
 class UserMovie(database.Base):
     __tablename__ = "user_movies"
@@ -129,4 +140,13 @@ class UserMovie(database.Base):
         Integer,
         ForeignKey("movie_id"),
         nullable=False
+    )
+
+    userM = relationship(
+        "UserM",
+        back_populates="user_movies"
+    )
+    movieU = relationship(
+        "MovieM",
+        back_populates="user_movies"
     )

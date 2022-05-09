@@ -7,6 +7,41 @@ from pydantic import BaseModel, Field, EmailStr, HttpUrl
 
 # Schemas
 
+## User Movies
+class UserRatingBase(BaseModel):
+    rating_stars: Optional[int] = Field(
+        default=None,
+        title="Rating of the movie",
+        description="Rating of the movie user quality",
+        example=5
+    )
+    rating_emoji: Optional[str] = Field(
+        default=None,
+        title="Emoji rating of the movie",
+        description="Emoji rating of the movie user quality",
+        example="💚"
+    )
+
+class UserMovieCreate(UserRatingBase):
+    pass
+
+class UserRating(UserRatingBase):
+    user_rating_id: Optional[int]
+    movieU_id: Optional[int] = Field(
+        title="Movie ID",
+        description="The unique ID of the movie",
+        example=1
+    )
+    userM_id: Optional[int] = Field(
+        title="User ID",
+        description="The unique ID of the user",
+        example=1
+    )
+
+
+    class Config:
+        orm_mode = True
+
 ## User
 class UserBase(BaseModel):
     email: EmailStr = Field(
@@ -59,7 +94,7 @@ class UserS(UserBase):
         exmaple="1"
     )
     is_active: bool   
-    #movies = list[MovieS] = []       
+    movieU: list[UserRating] = []       
     class Config:    
         orm_mode = True
 
@@ -157,42 +192,3 @@ class MovieS(MovieCreate):
     class Config:
         orm_mode = True
 
-## User Movies
-class UserRatingBase(BaseModel):
-    rating_stars: Optional[int] = Field(
-        default=None,
-        title="Rating of the movie",
-        description="Rating of the movie user quality",
-        example=5
-    )
-    rating_emoji: Optional[str] = Field(
-        default=None,
-        title="Emoji rating of the movie",
-        description="Emoji rating of the movie user quality",
-        example="💚"
-    )
-
-class UserMovieCreate(UserRatingBase):
-    movie_id: int = Field(
-        ...,
-        title="Movie ID",
-        description="The unique ID of the movie",
-        example=1
-    )
-    user_id: int = Field(
-        ...,
-        title="User ID",
-        description="The unique ID of the user",
-        example=1
-    )
-
-class UserRating(UserRatingBase):
-    user_rating_id: int = Field(
-        ...
-    )
-    #userM_id: int
-    #movieU_id: int
-    #user: UserS
-    #movies: list[MovieS] = []
-    class Config:
-        orm_mode = True
