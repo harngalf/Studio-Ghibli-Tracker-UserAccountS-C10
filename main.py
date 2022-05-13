@@ -10,6 +10,7 @@ from fastapi import status
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import Body, Query, Path, Form
+from fastapi.middleware.cors import CORSMiddleware
 
 # API Files
 import crud, models, schemas
@@ -18,6 +19,24 @@ import database
 #models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# CORS
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://localhost:8080",
+    "https://studio-ghibli-adhfn6hmk-marlon268.vercel.app"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 
 
 # Dependency
