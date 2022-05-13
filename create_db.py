@@ -1,6 +1,9 @@
 
-from database import Base, engine
-from models import movies_mod, user_mod, user_movies_mod
+import database
+import models 
+
+Base = database.Base
+engine = database.engine
 
 print("creating database")
 

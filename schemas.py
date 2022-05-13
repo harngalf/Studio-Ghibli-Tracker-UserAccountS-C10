@@ -192,3 +192,61 @@ class MovieS(MovieCreate):
     class Config:
         orm_mode = True
 
+# Back Office
+
+## Users
+class UserBOBase(BaseModel):
+    email: EmailStr = Field(
+        ...,
+        example="user@mailserver.com"
+        )
+    user_name: Optional[str] = Field(
+        min_length=3,
+        max_length=50,
+        title="User nickname",
+        description="User nickname",
+        example="@John_Doe"
+        )
+    profile_pic: Optional[HttpUrl] = Field(
+        None,
+        example="https://my-user-pic.com"
+        )
+
+
+class UserBOLog(BaseModel):
+    email: EmailStr = Field(
+        ...,
+        example="user@mailserver.com"
+    )
+
+class UserBOLogP(UserLog):
+    hashed_password: str = Field(
+        ...,
+        min_length=8,
+        max_length=128,
+        title="Password",
+        example = "password12345"
+        )  
+
+class UserBOCreate(UserBase):
+    hashed_password: str = Field(
+        ...,
+        min_length=8,
+        max_length=128,
+        title="Password",
+        example = "password12345"
+        ) 
+
+
+
+class UserBOS(UserBase):
+    user_id: Optional[int] = Field(
+        title="User ID",
+        description="The unique ID of the user",
+        exmaple="1"
+    )
+    is_active: bool   
+    movieU: list[UserRating] = []       
+    class Config:    
+        orm_mode = True
+
