@@ -5,9 +5,10 @@ from sqlalchemy.orm import relationship
 # API docs connection
 import database
 
+Base = database.Base
 
 ## User DB Model
-class UserM(database.Base):
+class UserM(Base):
     __tablename__ = "users"
     
     user_id = Column(
@@ -35,8 +36,13 @@ class UserM(database.Base):
         default=True
     )
 
+    # user_movies = relationship(
+    #     "UserMovie",
+    #     back_populates="userM"
+    # )
+
 ## Movies DB Model
-class MovieM(database.Base):
+class MovieM(Base):
     __tablename__ = "movies"
 
     movie_id = Column(
@@ -99,8 +105,14 @@ class MovieM(database.Base):
         nullable=True
     )
     
+    # user_movies = relationship(
+    #     "UserMovie",
+    #     back_populates="movieU"
+    # )
+
+
 ## Movies/User DB Model
-class UserMovie(database.Base):
+class UserMovie(Base):
     __tablename__ = "user_movies"
 
     user_movie_id = Column(
@@ -129,4 +141,44 @@ class UserMovie(database.Base):
         Integer,
         ForeignKey("movie_id"),
         nullable=False
+    )
+
+    # userM = relationship(
+    #     "UserM",
+    #     back_populates="user_movies"
+    # )
+    # movieU = relationship(
+    #     "MovieM",
+    #     back_populates="user_movies"
+    # )
+
+    # Back Office
+
+## Users
+class UserMBO(Base):
+    __tablename__ = "users_bo"
+    
+    user_id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )    
+    email = Column(
+        String(255),
+        unique=True,
+        index=True
+    )
+    hashed_password = Column(
+        String
+    )
+    user_name = Column(
+        String(125),
+        nullable=False
+    )
+    profile_pic = Column(
+        String(255)
+    )
+    is_active = Column(
+        Boolean, 
+        default=True
     )

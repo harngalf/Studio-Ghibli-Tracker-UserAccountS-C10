@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 # API files
 import models, schemas
 
-# CRUD operations
+# API CRUD operations
+## Users
 def get_user(
     db: Session, 
     user_id: int
@@ -42,6 +43,7 @@ def create_user(
     db.refresh(db_user)
     return db_user
 
+## Movies 
 def get_movies(
     db: Session, 
     skip: int = 0, 
@@ -74,18 +76,58 @@ def create_movies(
     return db_movies
 
 
-def create_user_movies(
+# def create_user_movies(
+#     db: Session, 
+#     user_movies: schemas.UserMovieCreate,
+#     user_id: int,
+#     movie_id: int
+# ):
+#     db_user_movies = models.UserMovie(
+#         **user_movies.dict(),
+#         userM_id=user_id,
+#         movieU_id=movie_id
+#     )
+#     db.add(db_user_movies)
+#     db.commit()
+#     db.refresh(db_user_movies)    
+#     return db_user_movies
+
+# Backoffice
+
+## Users
+
+def get_userBO(
     db: Session, 
-    user_movies: schemas.UserRating
+    user_id: int
 ):
-    # db_user_movies = UserMovie(
-    #     user_id=user_movies.user_id,
-    #     movie_id=user_movies.movie_id,
-    #     rating_stars=user_movies.rating_stars,
-    #     rating_emoji=user_movies.rating_emoji
-    # )
-    db_user_movies = UserMovie(**user_movies.dict())
-    db.add(db_user_movies)
+    return db.query(models.UserMBO).filter(models.UserMBO.user_id == user_id).first()
+
+def get_userBO_by_email(
+    db: Session, 
+    email: str
+):
+    return db.query(models.UserMBO).filter(models.UserMBO.email == email).first()
+
+def get_usersBO(
+    db: Session, 
+    skip: int = 0, 
+    limit: int = 100
+):
+    return db.query(models.UserMBO).offset(skip).limit(limit).all()
+
+def create_userBO(
+    db: Session, 
+    user: schemas.UserBOS
+):
+    fake_hashed_password = user.hashed_password + "not really hashed"
+    db_user = models.UserMBO(
+        # **user.dict()
+        email=user.email,
+        hashed_password=fake_hashed_password,
+        user_name=user.user_name,        
+        profile_pic=user.profile_pic
+    )
+    db.add(db_user)
     db.commit()
-    db.refresh(db_user_movies)
-    return db_user_movies
+    db.refresh(db_user)
+    return db_user

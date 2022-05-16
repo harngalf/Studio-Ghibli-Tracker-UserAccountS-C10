@@ -16,7 +16,10 @@ from fastapi.middleware.cors import CORSMiddleware
 import crud, models, schemas
 import database
 
-#models.Base.metadata.create_all(bind=engine)
+Base = models.Base
+engine = database.engine
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -296,17 +299,17 @@ def movie_by_title(
 
 ## User Movies
 @app.post(
-    path="/user/{user_id}/movies/rate",
-    #response_model=user_movie_sch.UserRating,
+    path="/user/{user_id}/movies/",
+    #response_model=schemas.UserRating,
     status_code=status.HTTP_201_CREATED,
     summary="Rate a movie",
     tags=["User/Movies"],
     )
 def rate_movie(
-    #user_id: int,
-    #movie_id: int,
-    #user_ratinf: user_movie_sch.UserRatingBase,
-    #db: Session = Depends(get_db)
+    # userM_id: int,
+    # movieU_id: int,
+    # user_movies: schemas.UserMovieCreate,
+    # db: Session = Depends(get_db)
 ):
     """
     ## Rate a movie
@@ -323,9 +326,13 @@ def rate_movie(
         - rating_stars: Optional[int] -> The rating of the movie created
         - rating_emoji: Optional[str] -> The emoji rating of the movie created
     """
-    #db_user_movies = crud.create_user_movies(db=db, user_id=user_id, movie_id=movie_id)
-    #return db_user_movies
     pass
+    # return crud.create_user_movies(
+    #     db=db, 
+    #     user_movies=user_movies, 
+    #     user_id=userM_id, 
+    #     movie_id=movieU_id
+    #     )
 
 ## Show a user movies
 @app.get(
@@ -353,5 +360,126 @@ def get_user_movies():
     """
     pass
 
+# Back Office API
 
+@app.post(
+    path="/backoffice/user/singup", 
+    response_model=schemas.UserBOS,
+    status_code=status.HTTP_201_CREATED,
+    tags=["Backoffice User"],
+    summary="Create a new backoffice user",
+    )
+async def create_user(
+    user: schemas.UserBOCreate,
+    db: Session = Depends(get_db)    
+    ):
+    """
+    ## Create New Back Office User
+
+       -This endpoint creates a new user into the Backoffice app and saves in the database.
+
+    ### Request body parameters:
+
+        - user: UserRegister -> The user to be created wirogth the required fields username, email and profile_pic
+
+    ### Returns imto a json with contains the user created:
+        -user_id: UUID -> The id of the user created
+        -username: str -> The username of the user created
+        -email: EmailStr -> The email of the user created
+        -profile_pic: HTML -> The profile pic of the user created
+
+    """
+    db_user = crud.get_userBO_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user already exists")
+    return crud.create_userBO(db=db, user=user)
+    
+# # Login BackOffice User
+@app.post(
+    path="/backoffice/user/login",
+    response_model=schemas.UserBOS,
+    status_code=status.HTTP_200_OK,
+    tags=["Backoffice User"],
+    summary="Login back office user",
+    )
+def login(
+    user: schemas.UserBOLogP,
+    db: Session = Depends(get_db)
+):
+    """
+    # Login the back office user.
+
+        This endpoint login the back office user and return the user logged.
+
+    ## Params:
+        - Request body parameters as usar name password and remember_me.
+
+    ## Returns: 
+        - the **username** logged.
+    """
+    db_userlogin = crud.get_userBO_by_email(db, email=user.email)
+    if not db_userlogin:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
+    if db_userlogin.hashed_password != user.hashed_password:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Wrong password")
+    return db_userlogin
+
+# ## Show all backoffice users
+@app.get(
+    path="/backoffice/users",
+    response_model=list[schemas.UserBOS],
+    status_code=status.HTTP_200_OK,
+    summary="Get all backoffice users",
+    tags=["Backoffice User"],
+    )
+def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    ## Get all backoffice users
+
+    This endpoint returns all backoffice users.
+
+    ### Params:
+        - Request body parameters as user name password and remember_me.
+
+    ### Returns: 
+        - user_id: UUID -> The id of the user created
+        - username: str -> The username of the user created
+        - email: EmailStr -> The email of the user created
+        - profile_pic: HTML -> The profile pic of the user created
+    """
+    users = crud.get_usersBO(db=db, skip=skip, limit=limit)
+    return users
+
+# ### Show a user by id
+@app.get(
+    path="/backoffice/users/{user_id}",
+    response_model=schemas.UserBOS,
+    status_code=status.HTTP_200_OK,
+    summary="Get user by id",
+    tags=["Backoffice User"]
+    )
+def get_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    ## Get backoffice user by id
+
+    This endpoint returns a backoffice user by id.
+
+    ### Params:
+
+        - user_id: UUID -> The id of the user created
+
+    ### Returns:        
+        - user_id: UUID -> The id of the user created 
+        - username: str -> The username of the user created
+        - email: EmailStr -> The email of the user created
+        - profile_pic: HTML -> The profile pic of the user created
+     
+    """
+    db_user_id = crud.get_userBO(db=db, user_id=user_id)
+    if not db_user_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
+    return db_user_id
 
