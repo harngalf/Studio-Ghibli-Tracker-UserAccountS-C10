@@ -1,0 +1,10 @@
+SQLAlchemy
+inflection
+cached-property
+typing_inspect
+
+[dev]
+pytest
+pytest-cov
+coverage
+faker
