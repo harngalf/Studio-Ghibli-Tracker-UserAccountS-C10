@@ -347,8 +347,8 @@ def get_user_movies():
     path="/backoffice/user/singup", 
     response_model=schemas.UserBOS,
     status_code=status.HTTP_201_CREATED,
-    tags=["Back Office User"],
-    summary="Create a new user",
+    tags=["Backoffice User"],
+    summary="Create a new backoffice user",
     )
 async def create_user(
     user: schemas.UserBOCreate,
@@ -357,7 +357,7 @@ async def create_user(
     """
     ## Create New Back Office User
 
-       -This endpoint creates a new user into the Backo Office app and saves in the database.
+       -This endpoint creates a new user into the Backoffice app and saves in the database.
 
     ### Request body parameters:
 
@@ -375,92 +375,92 @@ async def create_user(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user already exists")
     return crud.create_userBO(db=db, user=user)
     
-# # Login User
-# @app.post(
-#     path="/login",
-#     response_model=schemas.UserS,
-#     status_code=status.HTTP_200_OK,
-#     tags=["User"],
-#     summary="Login user",
-#     )
-# def login(
-#     user: schemas.UserLogP,
-#     db: Session = Depends(get_db)
-# ):
-#     """
-#     # Login the user.
+# # Login BackOffice User
+@app.post(
+    path="/backoffice/user/login",
+    response_model=schemas.UserBOS,
+    status_code=status.HTTP_200_OK,
+    tags=["Backoffice User"],
+    summary="Login back office user",
+    )
+def login(
+    user: schemas.UserBOLogP,
+    db: Session = Depends(get_db)
+):
+    """
+    # Login the back office user.
 
-#         This endpoint login the user and return the user logged.
+        This endpoint login the back office user and return the user logged.
 
-#     ## Params:
-#         - Request body parameters as usar name password and remember_me.
+    ## Params:
+        - Request body parameters as usar name password and remember_me.
 
-#     ## Returns: 
-#         - the **username** logged.
-#     """
-#     db_userlogin = crud.get_user_by_email(db, email=user.email)
-#     if not db_userlogin:
-#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
-#     if db_userlogin.hashed_password != user.hashed_password:
-#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Wrong password")
-#     return db_userlogin
+    ## Returns: 
+        - the **username** logged.
+    """
+    db_userlogin = crud.get_userBO_by_email(db, email=user.email)
+    if not db_userlogin:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
+    if db_userlogin.hashed_password != user.hashed_password:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Wrong password")
+    return db_userlogin
 
-# ## Show all users
-# @app.get(
-#     path="/users",
-#     response_model=list[schemas.UserS],
-#     status_code=status.HTTP_200_OK,
-#     summary="Get all users",
-#     tags=["User"],
-#     )
-# def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     """
-#     ## Get all users
+# ## Show all backoffice users
+@app.get(
+    path="/backoffice/users",
+    response_model=list[schemas.UserBOS],
+    status_code=status.HTTP_200_OK,
+    summary="Get all backoffice users",
+    tags=["Backoffice User"],
+    )
+def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    ## Get all backoffice users
 
-#     This endpoint returns all users.
+    This endpoint returns all backoffice users.
 
-#     ### Params:
-#         - Request body parameters as user name password and remember_me.
+    ### Params:
+        - Request body parameters as user name password and remember_me.
 
-#     ### Returns: 
-#         - user_id: UUID -> The id of the user created
-#         - username: str -> The username of the user created
-#         - email: EmailStr -> The email of the user created
-#         - profile_pic: HTML -> The profile pic of the user created
-#     """
-#     users = crud.get_users(db=db, skip=skip, limit=limit)
-#     return users
+    ### Returns: 
+        - user_id: UUID -> The id of the user created
+        - username: str -> The username of the user created
+        - email: EmailStr -> The email of the user created
+        - profile_pic: HTML -> The profile pic of the user created
+    """
+    users = crud.get_usersBO(db=db, skip=skip, limit=limit)
+    return users
 
 # ### Show a user by id
-# @app.get(
-#     path="/users/{user_id}",
-#     response_model=schemas.UserS,
-#     status_code=status.HTTP_200_OK,
-#     summary="Get user by id",
-#     tags=["User"]
-#     )
-# def get_user(
-#     user_id: int,
-#     db: Session = Depends(get_db)
-# ):
-#     """
-#     ## Get user by id
+@app.get(
+    path="/backoffice/users/{user_id}",
+    response_model=schemas.UserBOS,
+    status_code=status.HTTP_200_OK,
+    summary="Get user by id",
+    tags=["Backoffice User"]
+    )
+def get_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    ## Get backoffice user by id
 
-#     This endpoint returns a user by id.
+    This endpoint returns a backoffice user by id.
 
-#     ### Params:
+    ### Params:
 
-#         - user_id: UUID -> The id of the user created
+        - user_id: UUID -> The id of the user created
 
-#     ### Returns:        
-#         - user_id: UUID -> The id of the user created 
-#         - username: str -> The username of the user created
-#         - email: EmailStr -> The email of the user created
-#         - profile_pic: HTML -> The profile pic of the user created
+    ### Returns:        
+        - user_id: UUID -> The id of the user created 
+        - username: str -> The username of the user created
+        - email: EmailStr -> The email of the user created
+        - profile_pic: HTML -> The profile pic of the user created
      
-#     """
-#     db_user_id = crud.get_user(db=db, user_id=user_id)
-#     if not db_user_id:
-#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
-#     return db_user_id
+    """
+    db_user_id = crud.get_userBO(db=db, user_id=user_id)
+    if not db_user_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
+    return db_user_id
 

@@ -245,8 +245,7 @@ class UserBOS(UserBase):
         description="The unique ID of the user",
         exmaple="1"
     )
-    is_active: bool   
-    movieU: list[UserRating] = []       
+    is_active: bool        
     class Config:    
         orm_mode = True
 
