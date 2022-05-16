@@ -1,6 +1,2 @@
 .vscode/
-venv/
-venv/bin/
-venv/lib/
-venv/lib64/
-venv/pyvenv.cfg/
+.venv/
