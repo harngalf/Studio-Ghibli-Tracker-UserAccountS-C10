@@ -19,6 +19,12 @@ def get_user_by_email(
 ):
     return db.query(models.UserM).filter(models.UserM.email == email).first()
 
+def get_user_by_id(
+    db: Session, 
+    user_id: int
+):
+    return db.query(models.UserM).filter(models.UserM.user_id == user_id).first()
+
 def get_users(
     db: Session, 
     skip: int = 0, 
@@ -27,6 +33,23 @@ def get_users(
     return db.query(models.UserM).offset(skip).limit(limit).all()
 
 def create_user(
+    db: Session, 
+    user: schemas.UserS
+):
+    fake_hashed_password = user.hashed_password + "not really hashed"
+    db_user = models.UserM(
+        # **user.dict()
+        email=user.email,
+        hashed_password=fake_hashed_password,
+        user_name=user.user_name,        
+        profile_pic=user.profile_pic
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def update_user(
     db: Session, 
     user: schemas.UserS
 ):

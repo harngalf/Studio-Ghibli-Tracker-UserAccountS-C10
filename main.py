@@ -82,7 +82,10 @@ async def create_user(
     """
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user already exists")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="This user already exists"
+            )
     return crud.create_user(db=db, user=user)
     
 # Login User
@@ -173,6 +176,42 @@ def get_user(
     if not db_user_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
     return db_user_id
+
+@app.put(
+    path="/user/{user_id}/update", 
+    response_model=schemas.UserS,
+    status_code=status.HTTP_202_ACCEPTED,
+    tags=["User"],
+    summary="Update a user",
+    )
+async def update_user(
+    user_id: int,
+    user: schemas.UserCreate,
+    db: Session = Depends(get_db)    
+    ):
+    """
+    ## Update a user
+
+       -This endpoint update a user into the app and saves in the database.
+
+    ### Request body parameters:
+
+        - user: UserUpdate -> The user to be update wirogth the required fields username, email and profile_pic
+
+    ### Returns imto a json with contains the user created:
+        -user_id: UUID -> The id of the user created
+        -username: str -> The username of the user created
+        -email: EmailStr -> The email of the user created
+        -profile_pic: HTML -> The profile pic of the user created
+
+    """
+    db_user = crud.get_user_by_id(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="This user do not exists"
+            )
+    return crud.update_user(db=db, user=user)
     
 ## Movies
 @app.post(

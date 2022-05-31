@@ -94,7 +94,7 @@ class UserS(UserBase):
         exmaple="1"
     )
     is_active: bool   
-    movieU: list[UserRating] = []       
+    movieU: UserRating = []       
     class Config:    
         orm_mode = True
 
