@@ -4,7 +4,7 @@ from enum import Enum
 
 # SQLAlchemy
 from sqlalchemy.orm import Session
-#FastAPI 
+#FastAPI
 from fastapi import FastAPI
 from fastapi import status
 from fastapi import Depends
@@ -54,7 +54,7 @@ def get_db():
 
 ## User
 @app.post(
-    path="/user/singup", 
+    path="/user/singup",
     response_model=schemas.UserS,
     status_code=status.HTTP_201_CREATED,
     tags=["User"],
@@ -62,7 +62,7 @@ def get_db():
     )
 async def create_user(
     user: schemas.UserCreate,
-    db: Session = Depends(get_db)    
+    db: Session = Depends(get_db)
     ):
     """
     ## Create new user
@@ -83,11 +83,11 @@ async def create_user(
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, 
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="This user already exists"
             )
     return crud.create_user(db=db, user=user)
-    
+
 # Login User
 @app.post(
     path="/login",
@@ -108,7 +108,7 @@ def login(
     ## Params:
         - Request body parameters as usar name password and remember_me.
 
-    ## Returns: 
+    ## Returns:
         - the **username** logged.
     """
     db_userlogin = crud.get_user_by_email(db, email=user.email)
@@ -135,7 +135,7 @@ def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     ### Params:
         - Request body parameters as user name password and remember_me.
 
-    ### Returns: 
+    ### Returns:
         - user_id: UUID -> The id of the user created
         - username: str -> The username of the user created
         - email: EmailStr -> The email of the user created
@@ -165,12 +165,12 @@ def get_user(
 
         - user_id: UUID -> The id of the user created
 
-    ### Returns:        
-        - user_id: UUID -> The id of the user created 
+    ### Returns:
+        - user_id: UUID -> The id of the user created
         - username: str -> The username of the user created
         - email: EmailStr -> The email of the user created
         - profile_pic: HTML -> The profile pic of the user created
-     
+
     """
     db_user_id = crud.get_user(db=db, user_id=user_id)
     if not db_user_id:
@@ -178,7 +178,7 @@ def get_user(
     return db_user_id
 
 @app.put(
-    path="/user/{user_id}/update", 
+    path="/user/{user_id}/update",
     response_model=schemas.UserS,
     status_code=status.HTTP_202_ACCEPTED,
     tags=["User"],
@@ -186,8 +186,8 @@ def get_user(
     )
 async def update_user(
     user_id: int,
-    user: schemas.UserCreate,
-    db: Session = Depends(get_db)    
+    user: schemas.UserUpdateP,
+    db: Session = Depends(get_db)
     ):
     """
     ## Update a user
@@ -205,24 +205,25 @@ async def update_user(
         -profile_pic: HTML -> The profile pic of the user created
 
     """
-    db_user = crud.get_user_by_id(db, user_id=user_id)
+    # pass
+    db_user = crud.update_user(db, user_id=user_id, user=user)
     if db_user is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="This user do not exists"
             )
-    return crud.update_user(db=db, user=user)
-    
+    return crud.update_user(db=db, user_id=user_id, user=user)
+
 ## Movies
 @app.post(
     path="/movies/create",
-    response_model=schemas.MovieS, 
+    response_model=schemas.MovieS,
     status_code=status.HTTP_201_CREATED,
     tags=["Movies"],
     summary="Home page"
     )
 def movie_create(
-        movie: schemas.MovieCreate, 
+        movie: schemas.MovieCreate,
         db: Session = Depends(get_db)
     ):
     """
@@ -234,7 +235,7 @@ def movie_create(
 
         - movies: Movies
 
-    ### Returns: 
+    ### Returns:
         - title: sring
         - original_title: Optional[string]
         - original_title_romanized: Optional[string]
@@ -247,7 +248,7 @@ def movie_create(
         - release_date: Optional[string]
         - running_time: Optional[str]
         - rt_score: Optional[str]
-        - movie_cover: Optional[HttpUrl] 
+        - movie_cover: Optional[HttpUrl]
     """
     db_movies = crud.get_movie_by_title(db, title=movie.title)
     if db_movies:
@@ -256,13 +257,13 @@ def movie_create(
             detail="Movie is allready in the database"
         )
     return crud.create_movies(db=db, movie=movie)
-  
-    
+
+
 
 ### Show All Movies
 @app.get(
     path="/movies/",
-    response_model=list[schemas.MovieS], 
+    response_model=list[schemas.MovieS],
     status_code=status.HTTP_200_OK,
     tags=["Movies"],
     summary="Movies"
@@ -278,7 +279,7 @@ def movies(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
         - skip: int
         - limit: int
 
-    ### Returns: 
+    ### Returns:
         - title: sring
         - original_title: Optional[string]
         - original_title_romanized: Optional[string]
@@ -291,11 +292,11 @@ def movies(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
         - release_date: Optional[string]
         - running_time: Optional[str]
         - rt_score: Optional[str]
-        - movie_cover: Optional[HttpUrl] 
+        - movie_cover: Optional[HttpUrl]
     """
     movies = crud.get_movies(db, skip=skip, limit=limit)
     return movies
-   
+
 ### Show Movie by title
 
 @app.get(
@@ -313,7 +314,7 @@ def movie_by_title(
     ## Movie by title
 
     This is the home endpoint path, returns a movies by title all information.
-    
+
     ### Params:
 
     - title: string
@@ -345,10 +346,10 @@ def movie_by_title(
     tags=["User/Movies"],
     )
 def rate_movie(
-    # userM_id: int,
-    # movieU_id: int,
-    # user_movies: schemas.UserMovieCreate,
-    # db: Session = Depends(get_db)
+    userM_id: int,
+    movieU_id: int,
+    user_movies: schemas.UserMovieCreate,
+    db: Session = Depends(get_db)
 ):
     """
     ## Rate a movie
@@ -359,19 +360,19 @@ def rate_movie(
 
         - Request body parameters as user_id, movie_id, rating_stars and rating_emoji.
 
-    ### Returns:        
-        - user_id: UUID -> The id of the user created 
+    ### Returns:
+        - user_id: UUID -> The id of the user created
         - movie_id: UUID -> The id of the movie created
         - rating_stars: Optional[int] -> The rating of the movie created
         - rating_emoji: Optional[str] -> The emoji rating of the movie created
     """
-    pass
-    # return crud.create_user_movies(
-    #     db=db, 
-    #     user_movies=user_movies, 
-    #     user_id=userM_id, 
-    #     movie_id=movieU_id
-    #     )
+    #pass
+    return crud.create_user_movies(
+        db=db,
+        user_movies=user_movies,
+        user_id=userM_id,
+        movie_id=movieU_id
+        )
 
 ## Show a user movies
 @app.get(
@@ -381,7 +382,11 @@ def rate_movie(
     summary="Get user movies",
     tags=["User/Movies"]
 )
-def get_user_movies():
+def get_user_movies(
+    user_id: int,
+    movie_id: int,
+    db: Session = Depends(get_db)
+):
     """
     ## Get user movies
 
@@ -391,18 +396,21 @@ def get_user_movies():
 
         - user_id: UUID -> The id of the user created
 
-    ### Returns:        
-        - user_id: UUID -> The id of the user created 
+    ### Returns:
+        - user_id: UUID -> The id of the user created
         - movie_id: UUID -> The id of the movie rated
         - rating_stars: int -> The rating of the movie
         - rating_emoji: str -> The emoji rating of the movie
     """
-    pass
+    #pass
+    db_user_movies = crud.get_user_movies(db, user_id=user_id, movie_id=movie_id)
+    return db_user_movies
+
 
 # Back Office API
 
 @app.post(
-    path="/backoffice/user/singup", 
+    path="/backoffice/user/singup",
     response_model=schemas.UserBOS,
     status_code=status.HTTP_201_CREATED,
     tags=["Backoffice User"],
@@ -410,7 +418,7 @@ def get_user_movies():
     )
 async def create_user(
     user: schemas.UserBOCreate,
-    db: Session = Depends(get_db)    
+    db: Session = Depends(get_db)
     ):
     """
     ## Create New Back Office User
@@ -432,7 +440,7 @@ async def create_user(
     if db_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user already exists")
     return crud.create_userBO(db=db, user=user)
-    
+
 # # Login BackOffice User
 @app.post(
     path="/backoffice/user/login",
@@ -453,7 +461,7 @@ def login(
     ## Params:
         - Request body parameters as usar name password and remember_me.
 
-    ## Returns: 
+    ## Returns:
         - the **username** logged.
     """
     db_userlogin = crud.get_userBO_by_email(db, email=user.email)
@@ -480,7 +488,7 @@ def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     ### Params:
         - Request body parameters as user name password and remember_me.
 
-    ### Returns: 
+    ### Returns:
         - user_id: UUID -> The id of the user created
         - username: str -> The username of the user created
         - email: EmailStr -> The email of the user created
@@ -510,15 +518,103 @@ def get_user(
 
         - user_id: UUID -> The id of the user created
 
-    ### Returns:        
-        - user_id: UUID -> The id of the user created 
+    ### Returns:
+        - user_id: UUID -> The id of the user created
         - username: str -> The username of the user created
         - email: EmailStr -> The email of the user created
         - profile_pic: HTML -> The profile pic of the user created
-     
+
     """
     db_user_id = crud.get_userBO(db=db, user_id=user_id)
     if not db_user_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
     return db_user_id
 
+# ### Update a user by id
+@app.put(
+    path="/backoffice/users/{user_id}",
+    response_model=schemas.UserBOS,
+    status_code=status.HTTP_200_OK,
+    summary="Update user by id",
+    tags=["Backoffice User"]
+    )
+def update_user(
+    user_id: int,
+    user: schemas.UserBOS,
+    db: Session = Depends(get_db)
+):
+    """
+    ## Update user by id
+
+    This endpoint updates a backoffice user by id.
+
+    ### Params:
+
+        - user_id: UUID -> The id of the user created
+        - user: UserRegister -> The user to be created wirogth the required fields username, email and profile_pic
+
+    ### Returns:
+        - user_id: UUID -> The id of the user created
+        - username: str -> The username of the user created
+        - email: EmailStr -> The email of the user created
+        - profile_pic: HTML -> The profile pic of the user created
+    """
+    pass
+    # db_user = crud.get_userBO(db, user_id=user_id)
+    # if not db_user:
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This user does not exists")
+    # user_in = crud.update_userBO(db=db, user=user, user_id=user_id)
+    # return user_in
+
+## Roles Backoffice API
+@app.post(
+    path="/backoffice/roles/create",
+    response_model=schemas.RolSBO,
+    status_code=status.HTTP_201_CREATED,
+    tags=["Backoffice Roles"],
+    summary="Create a new backoffice role",
+    )
+async def create_role(
+    role: schemas.RolSBOBase,
+    db: Session = Depends(get_db)
+):
+    """
+    ## Create New Back Office Role
+
+       -This endpoint creates a new role into the Backoffice app and saves in the database.
+### Params:
+        - Request body parameters as role name and description.
+
+### Returns:
+        - role_id: UUID -> The id of the role created
+        - name: str -> The name of the role created
+        - description: str -> The description of the role created
+    """
+    db_role = crud.get_rol_by_name(db, rol_name=role.rol_name)
+    if db_role:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This role already exists")
+    return crud.create_rol(db=db, role=role)
+
+@app.get(
+    path="/backoffice/roles",
+    response_model=list[schemas.RolSBO],
+    status_code=status.HTTP_200_OK,
+    summary="Get all backoffice roles",
+    tags=["Backoffice Roles"],
+    )
+def get_roles(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    ## Get all backoffice roles
+
+    This endpoint returns all backoffice roles.
+
+    ### Params:
+        - Request body parameters as user name password and remember_me.
+
+    ### Returns:
+        - role_id: UUID -> The id of the role created
+        - name: str -> The name of the role created
+        - description: str -> The description of the role created
+    """
+    roles = crud.get_roles(db=db, skip=skip, limit=limit)
+    return roles

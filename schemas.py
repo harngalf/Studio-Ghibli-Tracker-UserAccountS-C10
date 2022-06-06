@@ -1,4 +1,5 @@
 # Python
+import datetime
 from typing import List, Optional
 
 # PyDantic
@@ -85,7 +86,26 @@ class UserCreate(UserBase):
         example = "password12345"
         ) 
 
-
+class UserUpdate(BaseModel):
+    user_name: Optional[str] = Field(
+        min_length=3,
+        max_length=50,
+        title="User nickname",
+        description="User nickname",
+        example="@John_Doe"
+        )
+    profile_pic: Optional[HttpUrl] = Field(
+        None,
+        example="https://my-user-pic.com"
+        )
+class UserUpdateP(UserUpdate):
+    hashed_password: str = Field(
+        ...,
+        min_length=8,
+        max_length=128,
+        title="Password",
+        example = "password12345"
+        )        
 
 class UserS(UserBase):
     user_id: Optional[int] = Field(
@@ -94,7 +114,7 @@ class UserS(UserBase):
         exmaple="1"
     )
     is_active: bool   
-    movieU: UserRating = []       
+    movieU: list[UserRating] = []       
     class Config:    
         orm_mode = True
 
@@ -211,24 +231,41 @@ class UserBOBase(BaseModel):
         None,
         example="https://my-user-pic.com"
         )
-
+    rol_id: int = Field(
+        default=None,
+        title="User role ID",
+        description="User role ID",
+        example=1
+    )   
 
 class UserBOLog(BaseModel):
     email: EmailStr = Field(
         ...,
         example="user@mailserver.com"
     )
+    entry_date: datetime.datetime = Field(
+        default=datetime.datetime.now(),
+        title="Entry date of the user",
+        description="Entry date of the user information",
+        example=datetime.datetime.now()
+    )
 
-class UserBOLogP(UserLog):
+class UserBOLogP(UserBOLog):
     hashed_password: str = Field(
         ...,
         min_length=8,
         max_length=128,
         title="Password",
         example = "password12345"
-        )  
+        )
+    entry_date: datetime.datetime = Field(
+        default=datetime.datetime.now(),
+        title="Entry date of the user",
+        description="Entry date of the user information",
+        example=datetime.datetime.now()
+    )
 
-class UserBOCreate(UserBase):
+class UserBOCreate(UserBOBase):
     hashed_password: str = Field(
         ...,
         min_length=8,
@@ -239,13 +276,64 @@ class UserBOCreate(UserBase):
 
 
 
-class UserBOS(UserBase):
+class UserBOS(UserBOBase):
     user_id: Optional[int] = Field(
         title="User ID",
         description="The unique ID of the user",
         exmaple="1"
+    )    
+    is_active: bool
+    
+    entry_date: datetime.datetime = Field(
+        default=datetime.datetime.now(),
+        title="Entry date of the user",
+        description="Entry date of the user information",
+        #example=datetime.datetime.now()
     )
-    is_active: bool        
+    date_modify: datetime.datetime = Field(
+        default=datetime.datetime.now(),
+        title="Date of the last modification of the user",
+        description="Date of the last modification of the user information",
+        #example=datetime.datetime.now()
+    )    
     class Config:    
         orm_mode = True
 
+
+## Roles
+class RolSBOBase(BaseModel):
+    rol_name: Optional[str] = Field(
+        min_length=3,
+        max_length=50,
+        title="Role name",
+        description="Role name",
+        example="Admin"
+    )
+    rol_description: Optional[str] = Field(
+        default=None,
+        title="Role description",
+        description="Role description",
+        example="Admin role"
+    )
+    
+class RolSBO(RolSBOBase):
+    rol_id: Optional[int] = Field(
+        title="Role ID",
+        description="The unique ID of the role",
+        exmaple="1"
+    )
+    rol_date_modify: datetime.datetime = Field(
+        default=datetime.datetime.now(),
+        title="Date of the last modification of the role",
+        description="Date of the last modification of the role information",
+        example=datetime.datetime.now()
+    )
+    rol_entry_date: datetime.datetime = Field(
+        default=datetime.datetime.now(),
+        title="Entry date of the role",
+        description="Entry date of the role information",
+        example=datetime.datetime.now()
+    )
+    user: list[UserBOS] = []
+    class Config:    
+        orm_mode = True

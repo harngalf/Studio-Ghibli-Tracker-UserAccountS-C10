@@ -1,5 +1,7 @@
+import datetime
+
 # SQLAlchemy
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boolean, Text, Float
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boolean, Text, Float,Date
 from sqlalchemy.orm import relationship
 
 # API docs connection
@@ -35,11 +37,12 @@ class UserM(Base):
         Boolean, 
         default=True
     )
+    
 
-    # user_movies = relationship(
-    #     "UserMovie",
-    #     back_populates="userM"
-    # )
+    user_movies = relationship(
+        "UserMovie",
+        back_populates="userM"
+    )
 
 ## Movies DB Model
 class MovieM(Base):
@@ -104,11 +107,12 @@ class MovieM(Base):
         Text,
         nullable=True
     )
+ 
     
-    # user_movies = relationship(
-    #     "UserMovie",
-    #     back_populates="movieU"
-    # )
+    movies_user = relationship(
+        "UserMovie",
+        back_populates="movieU"
+    )
 
 
 ## Movies/User DB Model
@@ -134,23 +138,23 @@ class UserMovie(Base):
     )
     userM_id = Column(
         Integer,
-        ForeignKey("user_id"),
+        ForeignKey("users.user_id"),
         nullable=False
     )
     movieU_id = Column(
         Integer,
-        ForeignKey("movie_id"),
+        ForeignKey("movies.movie_id"),
         nullable=False
     )
 
-    # userM = relationship(
-    #     "UserM",
-    #     back_populates="user_movies"
-    # )
-    # movieU = relationship(
-    #     "MovieM",
-    #     back_populates="user_movies"
-    # )
+    userM = relationship(
+        "UserM",
+        back_populates="user_movies"
+    )
+    movieU = relationship(
+        "MovieM",
+        back_populates="movies_user"
+    )
 
     # Back Office
 
@@ -181,4 +185,65 @@ class UserMBO(Base):
     is_active = Column(
         Boolean, 
         default=True
+    )
+    entry_date = Column(
+        Date,
+        nullable=False,
+        default=datetime.datetime.now()
+    )
+    date_modify = Column(
+        Date,
+        nullable=False,
+        default=datetime.datetime.now()
+    )
+    rol_id = Column(
+        Integer,
+        ForeignKey("roles_bo.rol_id")
+    )
+
+    roles = relationship(
+        "RolMBO",
+        back_populates="user"
+    )
+
+## Roles
+
+class RolMBO(Base):
+    __tablename__ = "roles_bo"
+
+    rol_id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+    rol_name = Column(
+        String(125),
+        nullable=False
+    )
+    rol_description = Column(
+        String(255),
+        nullable=False
+    )
+    rol_status = Column(
+        Boolean,
+        default=True
+    )
+    rol_date_modify = Column(
+        Date,
+        nullable=False,
+        default=datetime.datetime.now()
+    )
+    rol_entry_date = Column(
+        Date,
+        nullable=False,
+        default=datetime.datetime.now()
+    )
+    # owner_id = Column(
+    #     Integer,
+    #     ForeignKey("users_bo.user_id")
+    # )
+
+    user = relationship(
+        "UserMBO",
+        back_populates="roles"
     )
